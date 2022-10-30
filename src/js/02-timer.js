@@ -2,44 +2,45 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-let selectedDate;
+let countDownDate;
+let intervalId = null; 
 const startBtn = document.querySelector('[data-start]');
 const timer = document.querySelector('.timer');
 startBtn.disabled = true;
 
-const fpOptions = {
+const options = {
     enableTime: true,
     time_24hr: true,
     defaultDate: new Date(),
     minuteIncrement: 1,
     onClose(selectedDates) {
-        selectedDate = selectedDates[0];
+        countDownDate = selectedDates[0];
 
-        if (selectedDate.getTime() > Date.now()) {
+        if (countDownDate.getTime() > Date.now()) {
             startBtn.disabled = false;
-            Notify.success('Date is correct! Click start!');
+            Notify.success('Date is correct! Click start!');            
         } else {
             Notify.failure('Please choose a date in the future');
         }  
     },
 };
 
-flatpickr('#datetime-picker', fpOptions);
+flatpickr('#datetime-picker', options);
 
+// ===================================================================================================
 const countDownTimer = {
-    intervalId: null,
     refs: {},
-
+   
     start(getEl, countDownDate) {
-      Notify.success('Countdown start!');
+      Notify.info('Countdown start!');
     
-      this.update(getEl);
+      this.getRefs(getEl);
       this.intervalId = setInterval(() => {
         const ms = countDownDate.getTime() - Date.now();
         startBtn.disabled = true;
-        if (ms < 1000) {
+        if (ms < 0) {
           clearInterval(this.intervalId);
-          Notify.success('Arrived!');
+          Notify.warning('Arrived!')
         }
   
         const dataConvert = this.convertMs(ms);
@@ -49,7 +50,7 @@ const countDownTimer = {
        }, 1000);
     },
   
-    update(getEl) {
+    getRefs(getEl) {
       this.refs.days = getEl.querySelector('[data-days]');
       this.refs.hours = getEl.querySelector('[data-hours]');
       this.refs.minutes = getEl.querySelector('[data-minutes]');
@@ -74,4 +75,56 @@ const countDownTimer = {
     },
   };
 
-  startBtn.addEventListener('click', () => countDownTimer.start(timer, selectedDate));
+  startBtn.addEventListener('click', () => countDownTimer.start(timer, countDownDate));
+
+//   =======================================================================================
+
+// const getEl = selector => document.querySelector(selector);
+
+// startBtn.addEventListener('click', startCountDownTimer);
+
+// function startCountDownTimer() {
+//     Notify.info('Countdown start!');
+//     if (intervalId) {
+//       clearInterval(intervalId);
+//       Notify.warning('Arrived!')
+//     }
+//     countDownTime();
+//     intervalId = setInterval(countDownTime, 1000);
+// };
+
+// function countDownTime() {
+//     const ms = countDownDate - new Date();
+//     const { days, hours, minutes, seconds } = convertMs(ms);
+//     if (ms < 0) {
+//       return;
+//     }
+  
+//     getEl('[data-days]').textContent = days;
+//     getEl('[data-hours]').textContent = hours;
+//     getEl('[data-minutes]').textContent = minutes;
+//     getEl('[data-seconds]').textContent = seconds;
+// };
+
+// function convertMs(ms) {
+//     const second = 1000;
+//     const minute = second * 60;
+//     const hour = minute * 60;
+//     const day = hour * 24;
+        
+//     const days = addLeadinZero(Math.floor(ms / day));
+//     const hours = addLeadinZero(Math.floor((ms % day) / hour));
+//     const minutes = addLeadinZero(Math.floor(((ms % day) % hour) / minute));
+//     const seconds = addLeadinZero(Math.floor((((ms % day) % hour) % minute) / second));
+
+//     return { days, hours, minutes, seconds };
+// };
+    
+// function addLeadinZero(value) {
+//     return String(value).padStart(2, '0');
+// };
+
+
+
+
+
