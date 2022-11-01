@@ -6,6 +6,11 @@ let countDownDate;
 let intervalId = null; 
 const startBtn = document.querySelector('[data-start]');
 const timer = document.querySelector('.timer');
+const notifyOptions = {
+  backOverlay: true,  
+  clickToClose: true,
+  closeButton: true,
+};
 startBtn.disabled = true;
 
 const options = {
@@ -18,9 +23,9 @@ const options = {
 
         if (countDownDate.getTime() > Date.now()) {
             startBtn.disabled = false;
-            Notify.success('Date is correct! Click start!');            
+            Notify.success('Date is correct! Click start!', notifyOptions);            
         } else {
-            Notify.failure('Please choose a date in the future');
+            Notify.failure('Please choose a date in the future', notifyOptions);
         }  
     },
 };
@@ -94,7 +99,7 @@ const countDownTimer = {
 // };
 
 // function countDownTime() {
-//     const ms = countDownDate - new Date();
+//     const ms = countDownDate - Date.now();
 //     const { days, hours, minutes, seconds } = convertMs(ms);
 //     if (ms < 0) {
 //       return;
