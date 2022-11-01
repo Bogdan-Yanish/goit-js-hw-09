@@ -23,7 +23,6 @@ const options = {
 
         if (countDownDate.getTime() > Date.now()) {
             startBtn.disabled = false;
-            Notify.success('Date is correct! Click start!', notifyOptions);            
         } else {
             Notify.failure('Please choose a date in the future', notifyOptions);
         }  
@@ -37,15 +36,15 @@ const countDownTimer = {
     refs: {},
    
     start(getEl, countDownDate) {
-      Notify.info('Countdown start!');
+      Notify.success('Date is correct! Countdown start!');
     
       this.getRefs(getEl);
       this.intervalId = setInterval(() => {
         const ms = countDownDate.getTime() - Date.now();
         startBtn.disabled = true;
-        if (ms < 0) {
+        if (ms <= 0) {
           clearInterval(this.intervalId);
-          Notify.warning('Arrived!')
+          return Notify.info('Countdown is over!')
         }
   
         const dataConvert = this.convertMs(ms);
@@ -89,10 +88,10 @@ const countDownTimer = {
 // startBtn.addEventListener('click', startCountDownTimer);
 
 // function startCountDownTimer() {
-//     Notify.info('Countdown start!');
+//     Notify.info('Countdown start!', notifyOptions);
 //     if (intervalId) {
 //       clearInterval(intervalId);
-//       Notify.warning('Arrived!')
+//       Notify.warning('Countdown is over!', notifyOptions)
 //     }
 //     countDownTime();
 //     intervalId = setInterval(countDownTime, 1000);
@@ -101,7 +100,7 @@ const countDownTimer = {
 // function countDownTime() {
 //     const ms = countDownDate - Date.now();
 //     const { days, hours, minutes, seconds } = convertMs(ms);
-//     if (ms < 0) {
+//     if (ms <= 0) {
 //       return;
 //     }
   
